@@ -3,67 +3,606 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Portfolio</title>
+    <title>Safa Portfolio</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --bg-dark: #02030a;
+            --bg-light: #f4f4fb;
+
+            --surface-dark: rgba(255, 255, 255, 0.05);
+            --surface-light: rgba(255, 255, 255, 0.7);
+
+            --text-dark: #e8f9ff;
+            --text-muted-dark: #8aa6b8;
+
+            --text-light: #161616;
+            --text-muted-light: #555;
+
+            --accent-blue: #00eaff;
+            --accent-purple: #b26bff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
             margin: 0;
-            padding: 0;
+            font-family: "Inter", sans-serif;
+            background: radial-gradient(circle at top, #091427 0, var(--bg-dark) 55%, #000 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        body.light {
+            background: radial-gradient(circle at top, #ffffff 0, var(--bg-light) 55%, #dcdcec 100%);
+            color: var(--text-light);
+        }
+
+        /* background blobs */
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(90px);
+            opacity: 0.5;
+            mix-blend-mode: screen;
+        }
+
+        .blob.blue {
+            background: var(--accent-blue);
+            width: 420px;
+            height: 420px;
+            top: -80px;
+            left: 10%;
+        }
+
+        .blob.purple {
+            background: var(--accent-purple);
+            width: 380px;
+            height: 380px;
+            top: 40%;
+            right: 5%;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        /* NAV BAR */
+        .top-bar {
             display: flex;
             justify-content: center;
+            margin-bottom: 40px;
+            position: sticky;
+            top: 15px;
+            z-index: 10;
+        }
+
+        .nav-shell {
+            display: flex;
             align-items: center;
-            height: 100vh;
+            gap: 18px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: rgba(5, 5, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
         }
 
-        .container {
+        body.light .nav-shell {
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 12px 30px rgba(80, 80, 140, 0.25);
+        }
+
+        .logo {
+            font-family: "Orbitron", sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            padding: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            position: relative;
+        }
+
+        .nav-link {
+            position: relative;
+            border: none;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            padding: 8px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            opacity: 0.75;
+            transition: 0.2s ease;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link.active {
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.03));
+            color: #111;
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+            opacity: 1;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--accent-blue);
+            padding: 6px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body.light .theme-toggle {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--accent-purple);
+        }
+
+        .cta-chip {
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            background: linear-gradient(120deg, var(--accent-purple), var(--accent-blue));
+            color: #050510;
+            box-shadow: 0 0 18px rgba(0, 234, 255, 0.5);
+        }
+
+        /* HERO */
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+            gap: 40px;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-text {
+            padding-right: 10px;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-muted-dark);
+        }
+
+        body.light .eyebrow {
+            color: var(--text-muted-light);
+        }
+
+        .hero h1 {
+            font-family: "Orbitron", sans-serif;
+            font-size: 42px;
+            margin: 10px 0 12px;
+            background: linear-gradient(120deg, #ffffff, var(--accent-blue));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        body.light .hero h1 {
+            background: linear-gradient(120deg, #111, var(--accent-purple));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        #intro-text {
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 520px;
+            color: var(--text-muted-dark);
+            min-height: 70px;
+            border-right: 2px solid var(--accent-blue);
+            white-space: pre-wrap;
+            overflow: hidden;
+        }
+
+        body.light #intro-text {
+            color: var(--text-muted-light);
+            border-right-color: var(--accent-purple);
+        }
+
+        .hero-sub {
+            margin-top: 14px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--accent-blue);
+        }
+
+        body.light .hero-sub {
+            color: var(--accent-purple);
+        }
+
+        .pill-row {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        body.light .pill {
+            border-color: rgba(20, 20, 40, 0.3);
+        }
+
+        /* HERO ORBIT / AVATAR */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+        }
+
+        .orbit {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.9));
+            box-shadow: 0 0 40px rgba(0, 234, 255, 0.3);
+            overflow: hidden;
+        }
+
+        body.light .orbit {
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.95), rgba(190, 190, 220, 0.7));
+            box-shadow: 0 0 30px rgba(178, 107, 255, 0.5);
+        }
+
+        .orbit-inner {
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 255, 255, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
+            padding: 10px;
+            font-size: 13px;
         }
 
-        h1 {
-            margin-bottom: 20px;
-            color: #333;
+        .orbit-tag {
+            position: absolute;
+            bottom: 14px;
+            padding: 6px 11px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 11px;
         }
 
-        p {
-            margin-bottom: 30px;
-            color: #666;
+        body.light .orbit-tag {
+            background: rgba(255, 255, 255, 0.9);
+            color: #111;
         }
 
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            text-decoration: none;
-            background: #0078ff;
-            color: white;
-            border-radius: 8px;
+        /* CARDS SECTION */
+        .section-title {
+            margin-top: 60px;
             font-size: 18px;
-            transition: 0.3s ease;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-muted-dark);
         }
 
-        .btn:hover {
-            background: #005fcc;
+        body.light .section-title {
+            color: var(--text-muted-light);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .card {
+            padding: 22px 20px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.65));
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+            color: inherit;
+            text-decoration: none;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light .card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(220, 220, 245, 0.9));
+            border-color: rgba(40, 40, 90, 0.15);
+            box-shadow: 0 16px 32px rgba(70, 70, 130, 0.25);
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(0, 234, 255, 0.2), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.22s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 26px 50px rgba(0, 0, 0, 0.7);
+            border-color: var(--accent-blue);
+        }
+
+        body.light .card:hover {
+            box-shadow: 0 22px 40px rgba(120, 100, 200, 0.4);
+            border-color: var(--accent-purple);
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-muted-dark);
+            margin-bottom: 8px;
+        }
+
+        body.light .card-label {
+            color: var(--text-muted-light);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin: 4px 0 10px;
+        }
+
+        .card p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .card-footer {
+            margin-top: 14px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--accent-blue);
+        }
+
+        body.light .card-footer {
+            color: var(--accent-purple);
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>My Portfolio</h1>
-        <p>Welcome! Here are my links:</p>
-
-        <a href="https://github.com/YOUR_USERNAME" class="btn" target="_blank">My GitHub</a>
-        <a href="https://www.linkedin.com/in/YOUR_USERNAME" class="btn" target="_blank">My LinkedIn</a>
-        <a href="cv.pdf" class="btn" target="_blank">My CV</a>
+    <div class="bg-glow">
+        <div class="blob blue"></div>
+        <div class="blob purple"></div>
     </div>
+
+    <main>
+        <!-- NAV -->
+        <div class="top-bar">
+            <div class="nav-shell">
+                <div class="logo">SY</div>
+
+                <div class="nav-links">
+                    <button class="nav-link active" data-target="home">Home</button>
+                    <button class="nav-link" data-target="about">About</button>
+                    <button class="nav-link" data-target="links">Links</button>
+                    <button class="nav-link" data-target="contact">Contact</button>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="themeToggle">🌙 Night</button>
+                    <button class="cta-chip" onclick="document.getElementById('links').scrollIntoView({behavior:'smooth'})">
+                        View my links
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HERO -->
+        <section class="hero" id="home">
+            <div class="hero-text">
+                <div class="eyebrow">Cybersecurity · Student · Explorer</div>
+                <h1>Hey, I'm Safa.</h1>
+                <p id="intro-text"></p>
+                <div class="hero-sub">Oslo ➝ London · 3rd year Cyber Security</div>
+
+                <div class="pill-row">
+                    <div class="pill">Network security</div>
+                    <div class="pill">Ethical hacking</div>
+                    <div class="pill">Cloud & Linux</div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="orbit">
+                    <div class="orbit-inner">
+                        Building a cyber-secure future,<br>
+                        one project at a time.
+                    </div>
+                    <div class="orbit-tag">Available for graduate roles</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="section-title">About / Story</div>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-label">Journey</div>
+                    <h3>From Oslo to London</h3>
+                    <p>
+                        I grew up in Oslo, Norway and moved to London to study Cyber Security.
+                        I’m obsessed with understanding how systems break — and how to secure them.
+                    </p>
+                    <div class="card-footer">
+                        <span>Curious · Determined · Hands-on</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-label">Focus</div>
+                    <h3>What I'm learning</h3>
+                    <p>
+                        Penetration testing, network defense, scripting, and security fundamentals. 
+                        I enjoy breaking things in labs, then documenting how to fix them.
+                    </p>
+                    <div class="card-footer">
+                        <span>Always learning</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LINKS -->
+        <section id="links">
+            <div class="section-title">Links / Portfolio</div>
+            <div class="cards">
+                <a href="https://github.com/Safaabdiasis1234" target="_blank" class="card">
+                    <div class="card-label">Code</div>
+                    <h3>GitHub</h3>
+                    <p>Explore my projects, labs, experiments, and security-focused code.</p>
+                    <div class="card-footer">
+                        <span>View repositories</span>
+                        <span>↗</span>
+                    </div>
+                </a>
+
+                <a href="https://www.linkedin.com/in/safa-yusuf-039476216/" target="_blank" class="card">
+                    <div class="card-label">Network</div>
+                    <h3>LinkedIn</h3>
+                    <p>See my experience, education, and connect with me professionally.</p>
+                    <div class="card-footer">
+                        <span>Connect with me</span>
+                        <span>↗</span>
+                    </div>
+                </a>
+
+                
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="section-title">Contact</div>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-label">Get in touch</div>
+                    <h3>Let’s build something</h3>
+                    <p>
+                        If you’d like to chat about cybersecurity, projects, internships, or collaboration,
+                        feel free to reach out.
+                    </p>
+                    <div class="card-footer">
+                        <span>safaabdiasis@gmail.com 📧</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            const light = document.body.classList.contains('light');
+            themeToggle.textContent = light ? '☀️ Day' : '🌙 Night';
+        }
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // animated intro text
+        const introElement = document.getElementById('intro-text');
+        const introString =
+            "Hi, my name is Safa from Oslo, Norway. I'm a 3rd-year Cyber Security student currently studying in London. I love tech, hacking, building cool things, and exploring cybersecurity.";
+        let introIndex = 0;
+
+        function typeIntro() {
+            if (introIndex <= introString.length) {
+                introElement.textContent = introString.slice(0, introIndex);
+                introIndex++;
+                setTimeout(typeIntro, 35); // speed
+            } else {
+                // stop cursor after typing
+                introElement.style.borderRight = 'none';
+            }
+        }
+        typeIntro();
+
+        // nav active + smooth scroll
+        const navButtons = document.querySelectorAll('.nav-link');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.target;
+                const section = document.getElementById(targetId);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                navButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
